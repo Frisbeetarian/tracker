@@ -22,8 +22,8 @@ Follow the schema/types in `src/lib/inventory.ts` exactly. Steps:
 2. Insert it in `events` in the correct spot — the array is newest-first by date.
 3. Honor the honesty model (see CLAUDE.md): events are context only and are
    **never summed** into the headline. Do not edit `totals` here.
-4. If a Spanish/Arabic content file exists (`src/i18n/content.ar.ts`), offer to
-   add the Arabic `title`/`summary` for this event id (English fallback is fine).
+4. If the Arabic content file exists (`src/i18n/content.ar.ts`), offer to add
+   the Arabic `title`/`summary` for this event id (English fallback is fine).
 5. Run `npm run build` to confirm the data validates and the site compiles.
 6. Summarize what you added and remind me to review and commit on a feature
    branch (direct commits to `main` are blocked by a hook).
