@@ -5,11 +5,13 @@ import {
   meta,
   formatDate,
 } from "../lib/inventory";
+import { useCountUp } from "../hooks/useCountUp";
 import FloorBar from "./FloorBar";
 
-export default function Hero() {
+export default function Hero({ animate = false }: { animate?: boolean }) {
   const down = netChangeSinceBaseline < 0;
   const delta = Math.abs(netChangeSinceBaseline);
+  const count = useCountUp(currentTotal.count, animate);
 
   return (
     <header className="mx-auto max-w-4xl px-4 pt-8 pb-12">
@@ -32,7 +34,7 @@ export default function Hero() {
 
         <div className="mt-4 flex flex-col items-center">
           <span className="pixel-text leading-none text-amber glow-amber-strong text-[clamp(5rem,19vw,12rem)]">
-            {currentTotal.count}
+            {count}
           </span>
           <span
             className={`pixel-text mt-5 text-xs sm:text-sm ${
