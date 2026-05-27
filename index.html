@@ -2,6 +2,20 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
+    <script>
+      // Canonical host: redirect www → apex before render (preserve path/query/hash).
+      (function () {
+        if (location.hostname === "www.reapertracker.com") {
+          location.replace(
+            "https://reapertracker.com" +
+              location.pathname +
+              location.search +
+              location.hash,
+          );
+        }
+      })();
+    </script>
+    <link rel="canonical" href="https://reapertracker.com/" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>MQ-9 Reaper Tracker — How Many Does the U.S. Have?</title>

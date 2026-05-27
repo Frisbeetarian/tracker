@@ -80,12 +80,62 @@ entry is malformed, so it can't ship broken.
 
 ## Deploy
 
-It's a static site — `npm run build` outputs `dist/`. Deploy that anywhere:
+It's a static site — `npm run build` outputs `dist/`. Any static host works.
 
-- **Vercel / Netlify**: import the repo, framework preset "Vite", build
-  `npm run build`, output `dist`.
-- **GitHub Pages**: push `dist/` (set `base` in `vite.config.ts` if served from
-  a subpath).
+### Live deploy: Railway (current)
+
+Railway expects a long-running service, so the app is served by [`serve`](https://www.npmjs.com/package/serve)
+(see the `start` script) rather than just shipping `dist/`. Config is pinned in
+[`railway.json`](railway.json).
+
+1. **New Project → Deploy from GitHub repo →** select this repo.
+2. Railway runs `npm install` → `npm run build` → `npm start` automatically.
+3. Service → **Variables** → set `PORT=8080` (the app listens on `$PORT`; this
+   makes the port deterministic).
+4. Service → **Settings → Networking → Custom Domain** → add `reapertracker.com`
+   and `www.reapertracker.com`, each with **target port `8080`**.
+
+Sanity check: open the generated `*.up.railway.app` URL — if the tracker loads,
+the service is healthy and anything else is just DNS.
+
+### Custom domain DNS (Namecheap)
+
+Railway shows a unique CNAME target + a `_railway-verify` TXT token per domain.
+**The apex (`@`) cannot use a CNAME** (DNS forbids it) — use Namecheap's **ALIAS**
+record type, which is their CNAME-flattening equivalent. Delete Namecheap's
+default parking records (`URL Redirect @`, `CNAME www → parkingpage`) first.
+
+| Type  | Host               | Value                                  |
+| ----- | ------------------ | -------------------------------------- |
+| ALIAS | `@`                | _(apex CNAME target from Railway)_     |
+| TXT   | `_railway-verify`  | `railway-verify=…` _(apex token)_      |
+| CNAME | `www`              | _(www CNAME target from Railway)_      |
+| TXT   | `_railway-verify.www` | `railway-verify=…` _(www token)_    |
+
+Verify resolution before expecting SSL:
+
+```bash
+dig reapertracker.com +short
+dig www.reapertracker.com +short
+dig txt _railway-verify.reapertracker.com +short
+```
+
+Railway auto-issues SSL once the records resolve.
+
+### Canonical host
+
+Apex (`reapertracker.com`) is canonical. `index.html` carries a
+`<link rel="canonical">` plus a small inline script that redirects
+`www.` → apex (preserving path/query/hash), so the two hosts don't get indexed
+as duplicate content. `serve` only does path-based redirects, so this host-level
+redirect is handled client-side.
+
+### Other hosts
+
+- **Vercel / Netlify**: import the repo, preset "Vite", output `dist` (these
+  serve statics directly — no `serve`/`PORT` needed).
+- **GitHub Pages**: publish `dist/` (set `base` in `vite.config.ts` if served
+  from a subpath).
 
 ## Roadmap
 
