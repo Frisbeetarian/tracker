@@ -137,6 +137,27 @@ redirect is handled client-side.
 - **GitHub Pages**: publish `dist/` (set `base` in `vite.config.ts` if served
   from a subpath).
 
+## SEO / search indexing
+
+The page is **prerendered** to static HTML at build time via
+[`vite-react-ssg`](https://github.com/Daydreamer-riri/vite-react-ssg) (see
+`src/main.tsx`), so crawlers get real content instead of an empty SPA shell. The
+Recharts chart is gated to client-only (`TrendChart.tsx`) so it doesn't affect
+prerender/hydration. Also shipped: `public/robots.txt`, `public/sitemap.xml`,
+`<link rel="canonical">`, and Open Graph / Twitter meta tags in `index.html`.
+
+To actually get listed on Google (manual, one-time):
+
+1. **search.google.com/search-console** → add a **Domain** property for
+   `reapertracker.com` → add the TXT verification record at Namecheap → verify.
+2. **URL Inspection** → enter the URL → **Request Indexing**.
+3. **Sitemaps** → submit `https://reapertracker.com/sitemap.xml`.
+
+New domains can take days to a couple weeks to appear. Update `sitemap.xml`'s
+`<lastmod>` when content changes meaningfully. The OG image currently points at
+the SVG favicon; for rich social previews, add a 1200×630 PNG and update the
+`og:image` / `twitter:image` URLs.
+
 ## Roadmap
 
 - Arabic + English (i18n, RTL, Arabic font fallback) — deferred.
