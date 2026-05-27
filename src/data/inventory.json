@@ -1,0 +1,190 @@
+{
+  "meta": {
+    "lastUpdated": "2026-05-27",
+    "scope": "U.S. Air Force MQ-9 / MQ-9A Reaper (Active force + Air National Guard). Holdings of other services and foreign operators are not included.",
+    "fleetFloorRequirement": 189,
+    "totalEverBuiltForUS": 575,
+    "notes": [
+      "The headline figure is the most recent officially-stated fleet total, NOT a sum of the loss events below.",
+      "Loss events are documented individually for context. Yemen tallies in particular overlap between Houthi claims and U.S. acknowledgements, so events should not be added together to derive the fleet size."
+    ]
+  },
+  "totals": [
+    {
+      "date": "2024-09-30",
+      "label": "Sep 2024",
+      "count": 230,
+      "note": "Air Force-stated total as of September 2024.",
+      "source": {
+        "title": "How big is the Air Force's Reaper drone fleet?",
+        "publisher": "Task & Purpose (citing U.S. Air Force)",
+        "url": "https://taskandpurpose.com/tech-tactics/air-force-reaper-drone-fleet/"
+      }
+    },
+    {
+      "date": "2025-09-30",
+      "label": "End FY2025",
+      "count": 182,
+      "note": "158 Active force + 24 Air National Guard, per congressional testimony (Lt. Gen. David Tabor).",
+      "source": {
+        "title": "To Replace Lost MQ-9s, USAF Eyes Next-Gen Reaper",
+        "publisher": "Air & Space Forces Magazine",
+        "url": "https://www.airandspaceforces.com/to-replace-lost-mq-9s-usaf-eyes-next-gen-reaper/"
+      }
+    },
+    {
+      "date": "2026-05-20",
+      "label": "May 2026",
+      "count": 135,
+      "note": "Fleet total after Operation Epic Fury losses, per Lt. Gen. Tabor's May 20, 2026 testimony — roughly 54 aircraft below the service's 189-aircraft floor.",
+      "source": {
+        "title": "Air Force dubs MQ-9 the 'MVP' of Epic Fury as lawmakers press manned-unmanned future",
+        "publisher": "Military Times",
+        "url": "https://www.militarytimes.com/news/your-military/2026/05/21/air-force-dubs-mq-9-the-mvp-of-epic-fury-as-lawmakers-press-manned-unmanned-future/"
+      }
+    }
+  ],
+  "events": [
+    {
+      "id": "2026-epic-fury",
+      "date": "2026-04-07",
+      "type": "loss",
+      "count": 24,
+      "cause": "combat",
+      "title": "24 MQ-9s lost in Operation Epic Fury (U.S.-Iran war)",
+      "summary": "A Congressional Research Service report states the U.S. lost 24 MQ-9 Reapers during the 2026 war with Iran — most shot down by air defenses, some destroyed on the ground at regional bases. Roughly 20% of the fleet.",
+      "confidence": "confirmed",
+      "sources": [
+        {
+          "title": "42 aircraft lost or damaged in Operation Epic Fury, congressional report says",
+          "publisher": "Stars and Stripes",
+          "url": "https://www.stripes.com/branches/air_force/2026-05-20/iran-jets-downed-war-fury-21727588.html"
+        },
+        {
+          "title": "Air Force Chief: MQ-9 Reaper 'Most Valuable Player' of Iran War Despite Losses",
+          "publisher": "Air & Space Forces Magazine",
+          "url": "https://www.airandspaceforces.com/mq-9-reaper-mvp-iran-war-despite-losses-wilsbach/"
+        }
+      ]
+    },
+    {
+      "id": "2025-11-yellow-sea-crash",
+      "date": "2025-11-24",
+      "type": "loss",
+      "count": 1,
+      "cause": "crash",
+      "title": "MQ-9 crashes into the Yellow Sea off South Korea",
+      "summary": "An MQ-9 of the 431st Expeditionary Reconnaissance Squadron (Kunsan AB) went down in the Yellow Sea during a routine mission. It was later recovered by U.S. and ROK forces.",
+      "confidence": "confirmed",
+      "sources": [
+        {
+          "title": "Air Force recovers Reaper drone that crashed last month off South Korea",
+          "publisher": "Stars and Stripes",
+          "url": "https://www.stripes.com/branches/air_force/2025-12-15/air-force-reaper-drone-crash-recovery-20096417.html"
+        }
+      ]
+    },
+    {
+      "id": "2025-03-yemen-cluster",
+      "date": "2025-03-15",
+      "type": "loss",
+      "count": 7,
+      "cause": "shootdown",
+      "title": "~7 MQ-9s lost over Yemen, spring 2025 campaign",
+      "summary": "A U.S. official confirmed at least seven MQ-9s were lost in the Yemen area since mid-March 2025 during intensified operations against the Houthis. This is an aggregate count, not a single incident.",
+      "confidence": "confirmed",
+      "sources": [
+        {
+          "title": "US has lost 7 multi-million-dollar drones in Yemen area since March — official",
+          "publisher": "The Times of Israel",
+          "url": "https://www.timesofisrael.com/liveblog_entry/us-has-lost-7-multi-million-dollar-drones-in-yemen-area-since-march-official/"
+        }
+      ]
+    },
+    {
+      "id": "2025-01-marib",
+      "date": "2025-01-01",
+      "type": "loss",
+      "count": 1,
+      "cause": "shootdown",
+      "title": "MQ-9 claimed downed over Marib",
+      "summary": "The Houthis claimed downing an MQ-9 over Marib governorate, their first MQ-9 claim of 2025.",
+      "confidence": "reported",
+      "sources": [
+        {
+          "title": "How the Houthis' strikes on US MQ-9 Reaper drones serve a wider regional agenda",
+          "publisher": "Atlantic Council",
+          "url": "https://www.atlanticcouncil.org/blogs/menasource/houthi-strikes-on-us-mq9-reaper-drones/"
+        }
+      ]
+    },
+    {
+      "id": "2024-12-mediterranean-ditch",
+      "date": "2024-12-16",
+      "type": "loss",
+      "count": 1,
+      "cause": "crash",
+      "title": "MQ-9 ditched in the Mediterranean after propeller loss",
+      "summary": "A 432nd Wing MQ-9 lost its propeller mid-flight (a gearbox spiral lock ring failure) and was intentionally ditched in the Mediterranean Sea. An Accident Investigation Board put the loss at about $13 million.",
+      "confidence": "confirmed",
+      "sources": [
+        {
+          "title": "Broken propeller caused $13M military Reaper drone to crash into sea",
+          "publisher": "Air Force Times",
+          "url": "https://www.airforcetimes.com/news/your-air-force/2025/08/14/lost-propeller-caused-13m-military-reaper-drone-to-crash-into-sea/"
+        }
+      ]
+    },
+    {
+      "id": "2024-12-al-bayda",
+      "date": "2024-12-28",
+      "type": "loss",
+      "count": 1,
+      "cause": "shootdown",
+      "title": "MQ-9 claimed downed over Al Bayda",
+      "summary": "Houthi spokesman Yahya Sare'e announced the downing of an MQ-9 over Al Bayda governorate.",
+      "confidence": "reported",
+      "sources": [
+        {
+          "title": "How the Houthis' strikes on US MQ-9 Reaper drones serve a wider regional agenda",
+          "publisher": "Atlantic Council",
+          "url": "https://www.atlanticcouncil.org/blogs/menasource/houthi-strikes-on-us-mq9-reaper-drones/"
+        }
+      ]
+    },
+    {
+      "id": "2024-09-yemen-pair",
+      "date": "2024-09-16",
+      "type": "loss",
+      "count": 2,
+      "cause": "shootdown",
+      "title": "Two MQ-9s downed over Yemen, September 2024",
+      "summary": "The U.S. military acknowledged that the Houthis shot down two MQ-9s in September 2024, including one reportedly downed over Dhamar province.",
+      "confidence": "confirmed",
+      "sources": [
+        {
+          "title": "Houthi rebels claim they shot down another US MQ-9 Reaper drone",
+          "publisher": "Defense News",
+          "url": "https://www.defensenews.com/news/your-military/2024/09/16/houthi-rebels-claim-they-shot-down-another-us-mq-9-reaper-drone/"
+        }
+      ]
+    },
+    {
+      "id": "2024-02-hodeida",
+      "date": "2024-02-19",
+      "type": "loss",
+      "count": 1,
+      "cause": "shootdown",
+      "title": "MQ-9 downed near Hodeida",
+      "summary": "An MQ-9 was shot down near the Red Sea port of Al Hudaydah, an early loss in the Houthi campaign against U.S. drones.",
+      "confidence": "reported",
+      "sources": [
+        {
+          "title": "Houthi rebels say US-made drone shot down over Yemen",
+          "publisher": "The Times of Israel",
+          "url": "https://www.timesofisrael.com/houthi-rebels-say-us-made-drone-shot-down-over-yemen/"
+        }
+      ]
+    }
+  ]
+}

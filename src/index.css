@@ -1,0 +1,137 @@
+@import "tailwindcss";
+
+/* ── Design tokens (Tailwind v4 @theme) ──────────────────────────── */
+@theme {
+  --font-pixel: "Press Start 2P", ui-monospace, monospace;
+  --font-term: "VT323", ui-monospace, "SFMono-Regular", monospace;
+
+  --color-void: #07070a;
+  --color-panel: #0d0f14;
+  --color-grid: #1b2230;
+
+  --color-amber: #ffb000;
+  --color-amber-dim: #8a5e00;
+  --color-green: #39ff14;
+  --color-cyan: #00f0ff;
+  --color-magenta: #ff2e88;
+  --color-ink: #d7e0e8;
+  --color-muted: #6b7689;
+}
+
+:root {
+  color-scheme: dark;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  background-color: var(--color-void);
+  color: var(--color-ink);
+  font-family: var(--font-term);
+  font-size: 20px;
+  line-height: 1.4;
+  -webkit-font-smoothing: none;
+  text-rendering: optimizeLegibility;
+}
+
+/* ── CRT scanlines + vignette overlay (full-screen, non-interactive) ─ */
+.crt-overlay {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 50;
+  background:
+    repeating-linear-gradient(
+      to bottom,
+      rgba(0, 0, 0, 0) 0px,
+      rgba(0, 0, 0, 0) 2px,
+      rgba(0, 0, 0, 0.28) 3px,
+      rgba(0, 0, 0, 0.28) 4px
+    ),
+    radial-gradient(
+      ellipse at center,
+      rgba(0, 0, 0, 0) 55%,
+      rgba(0, 0, 0, 0.55) 100%
+    );
+  animation: flicker 4s infinite steps(60);
+}
+
+@keyframes flicker {
+  0%,
+  100% {
+    opacity: 0.92;
+  }
+  50% {
+    opacity: 0.97;
+  }
+  52% {
+    opacity: 0.85;
+  }
+}
+
+/* ── Neon glow helpers ───────────────────────────────────────────── */
+.glow-amber {
+  text-shadow:
+    0 0 4px rgba(255, 176, 0, 0.8),
+    0 0 12px rgba(255, 176, 0, 0.5);
+}
+.glow-green {
+  text-shadow:
+    0 0 4px rgba(57, 255, 20, 0.9),
+    0 0 14px rgba(57, 255, 20, 0.5);
+}
+.glow-cyan {
+  text-shadow:
+    0 0 4px rgba(0, 240, 255, 0.9),
+    0 0 14px rgba(0, 240, 255, 0.5);
+}
+.glow-magenta {
+  text-shadow:
+    0 0 4px rgba(255, 46, 136, 0.9),
+    0 0 14px rgba(255, 46, 136, 0.5);
+}
+
+/* Pixel-stepped panel border (no anti-aliased rounding) */
+.pixel-border {
+  border: 3px solid var(--color-grid);
+  box-shadow:
+    0 0 0 1px #000,
+    inset 0 0 24px rgba(0, 240, 255, 0.04);
+}
+
+/* Blinking terminal cursor / indicator */
+.blink {
+  animation: blink 1.1s steps(2, start) infinite;
+}
+@keyframes blink {
+  to {
+    opacity: 0;
+  }
+}
+
+.pixel-text {
+  font-family: var(--font-pixel);
+  letter-spacing: 0.04em;
+  line-height: 1.5;
+}
+
+/* Subtle background grid for the tactical feel */
+.tactical-grid {
+  background-image:
+    linear-gradient(var(--color-grid) 1px, transparent 1px),
+    linear-gradient(90deg, var(--color-grid) 1px, transparent 1px);
+  background-size: 40px 40px;
+  background-position: center;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .crt-overlay {
+    animation: none;
+  }
+  .blink {
+    animation: none;
+  }
+}
