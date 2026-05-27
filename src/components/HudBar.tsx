@@ -1,5 +1,7 @@
 import { useEffect, useState } from "react";
 import { currentTotal, netChangeSinceBaseline } from "../lib/inventory";
+import { useLang } from "../i18n/LanguageContext";
+import LanguageToggle from "./LanguageToggle";
 
 /**
  * Sticky tactical header that slides in once the hero scrolls out of view,
@@ -7,6 +9,7 @@ import { currentTotal, netChangeSinceBaseline } from "../lib/inventory";
  * runs the bar is parked off-screen, so it never obscures content.
  */
 export default function HudBar() {
+  const { t } = useLang();
   const [show, setShow] = useState(false);
   const down = netChangeSinceBaseline < 0;
 
@@ -23,18 +26,21 @@ export default function HudBar() {
         show ? "translate-y-0" : "-translate-y-full"
       }`}
     >
-      <div className="mx-auto flex max-w-4xl items-center justify-between px-4 py-5 sm:py-6">
+      <div className="mx-auto flex max-w-4xl items-center justify-between gap-3 px-4 py-5 sm:py-6">
         <span className="pixel-text flex items-center gap-2 text-xs text-cyan glow-cyan">
-          <span className="blink">●</span> MQ-9 REAPER TRACKER
+          <span className="blink">●</span> {t("hudTitle")}
         </span>
-        <span className="pixel-text flex items-baseline gap-2 text-xs">
-          <span className="text-xl text-amber glow-amber sm:text-2xl">
-            {currentTotal.count}
+        <span className="flex items-center gap-4">
+          <span className="pixel-text flex items-baseline gap-2 text-xs">
+            <span className="text-xl text-amber glow-amber sm:text-2xl">
+              {currentTotal.count}
+            </span>
+            <span className="text-muted">{t("statRemaining")}</span>
+            <span className={down ? "text-magenta glow-magenta" : "text-green glow-green"}>
+              {down ? "▼" : "▲"}
+            </span>
           </span>
-          <span className="text-muted">REMAINING</span>
-          <span className={down ? "text-magenta glow-magenta" : "text-green glow-green"}>
-            {down ? "▼" : "▲"}
-          </span>
+          <LanguageToggle />
         </span>
       </div>
     </div>

@@ -1,3 +1,5 @@
+import { useLang } from "../i18n/LanguageContext";
+
 interface FloorBarProps {
   current: number;
   floor: number;
@@ -13,6 +15,7 @@ const SEGMENTS = 24;
  * shortfall reads as dark, dead cells.
  */
 export default function FloorBar({ current, floor, max }: FloorBarProps) {
+  const { t } = useLang();
   const ceiling = max ?? floor;
   const filled = Math.round((Math.min(current, ceiling) / ceiling) * SEGMENTS);
   const floorMark = Math.round((floor / ceiling) * SEGMENTS);
@@ -45,10 +48,10 @@ export default function FloorBar({ current, floor, max }: FloorBarProps) {
           <span className={belowFloor ? "text-amber glow-amber" : "text-green glow-green"}>
             {current}
           </span>{" "}
-          IN SERVICE
+          {t("inService")}
         </span>
         <span className="text-magenta glow-magenta">
-          REQ. FLOOR {floor}
+          {t("reqFloor")} {floor}
         </span>
       </div>
     </div>

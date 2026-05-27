@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
+import { useLang } from "../i18n/LanguageContext";
 
-const LINES = [
+const LINES_EN = [
   "> INITIALIZING REAPER TRACKER",
   "> ESTABLISHING UPLINK .......... OK",
   "> LOADING FLEET INVENTORY ...... OK",
@@ -9,6 +10,16 @@ const LINES = [
   "> SYSTEM ONLINE",
 ];
 
+const LINES_AR = [
+  "> تشغيل متتبّع ريبر",
+  "> تأسيس الاتصال .......... تم",
+  "> تحميل بيانات الأسطول ...... تم",
+  "> التحقق من المصادر ........... تم",
+  "> عرض الواجهة ................ تم",
+  "> النظام متّصل",
+];
+
+const LINE_COUNT = LINES_EN.length;
 const STEP_MS = 280;
 const FADE_MS = 700;
 
@@ -19,6 +30,8 @@ const FADE_MS = 700;
  * avoiding any flash of the final value. Removes itself once faded.
  */
 export default function BootSequence({ onReveal }: { onReveal: () => void }) {
+  const { lang } = useLang();
+  const lines = lang === "ar" ? LINES_AR : LINES_EN;
   const [shown, setShown] = useState(0);
   const [closing, setClosing] = useState(false);
   const [gone, setGone] = useState(false);
@@ -27,11 +40,11 @@ export default function BootSequence({ onReveal }: { onReveal: () => void }) {
 
   useEffect(() => {
     const timers: number[] = [];
-    LINES.forEach((_, i) => {
+    for (let i = 0; i < LINE_COUNT; i++) {
       timers.push(window.setTimeout(() => setShown(i + 1), STEP_MS * (i + 1)));
-    });
-    const total = STEP_MS * LINES.length;
-    // Hold ~1.2s on "SYSTEM ONLINE", then start fading AND start the count-up.
+    }
+    const total = STEP_MS * LINE_COUNT;
+    // Hold ~1.2s on the last line, then start fading AND start the count-up.
     timers.push(
       window.setTimeout(() => {
         setClosing(true);
@@ -51,8 +64,8 @@ export default function BootSequence({ onReveal }: { onReveal: () => void }) {
         closing ? "opacity-0" : "opacity-100"
       }`}
     >
-      <pre className="w-full max-w-lg px-6 text-left text-base leading-loose text-green glow-green sm:text-lg">
-        {LINES.slice(0, shown).map((line, i) => (
+      <pre className="w-full max-w-lg px-6 text-start text-base leading-loose text-green glow-green sm:text-lg">
+        {lines.slice(0, shown).map((line, i) => (
           <div key={i}>
             {line}
             {i === shown - 1 && <span className="blink"> █</span>}
