@@ -1,10 +1,13 @@
 name: Lighthouse CI
 
 on:
-  push:
-    branches: [main]
   pull_request:
     branches: [main]
+    paths-ignore:
+      - "**/*.md"
+      - ".gitignore"
+      - "LICENSE"
+  workflow_dispatch:
 
 jobs:
   lighthouse:
