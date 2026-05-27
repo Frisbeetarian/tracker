@@ -11,6 +11,7 @@
 
   --color-amber: #ffb000;
   --color-amber-dim: #8a5e00;
+  --color-red: #ff2a2a;
   --color-green: #39ff14;
   --color-cyan: #00f0ff;
   --color-magenta: #ff2e88;
@@ -92,6 +93,11 @@ body {
   text-shadow:
     0 0 4px rgba(255, 46, 136, 0.9),
     0 0 14px rgba(255, 46, 136, 0.5);
+}
+.glow-red {
+  text-shadow:
+    0 0 4px rgba(255, 42, 42, 0.9),
+    0 0 14px rgba(255, 42, 42, 0.5);
 }
 
 /* Headline number: intense amber neon that slowly pulses */

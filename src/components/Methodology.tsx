@@ -3,7 +3,7 @@ import { SectionHeading } from "./ui";
 
 export default function Methodology() {
   return (
-    <section className="mx-auto max-w-4xl px-4 py-10">
+    <section id="methodology" className="mx-auto max-w-4xl scroll-mt-28 px-4 py-10">
       <SectionHeading index="03">METHODOLOGY</SectionHeading>
 
       <div className="pixel-border bg-panel/60 space-y-5 p-5 text-lg leading-relaxed">
@@ -28,6 +28,12 @@ export default function Methodology() {
           overlap: Houthi claims, U.S. acknowledgements, and journalist tallies
           do not line up one-to-one. Summing the log would produce a
           falsely-precise, wrong number.
+        </p>
+
+        <p>
+          <span className="text-amber glow-amber">Combat-loss cost.</span> The
+          dollar figure multiplies airframes lost to enemy action (shootdowns and
+          combat — not crashes) by an assumed unit cost. {meta.combatUnitCostNote}
         </p>
 
         <ul className="space-y-2">

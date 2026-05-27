@@ -4,6 +4,8 @@
     "scope": "U.S. Air Force MQ-9 / MQ-9A Reaper (Active force + Air National Guard). Holdings of other services and foreign operators are not included.",
     "fleetFloorRequirement": 189,
     "totalEverBuiltForUS": 575,
+    "combatUnitCostUsd": 30000000,
+    "combatUnitCostNote": "Uses an approximate ~$30M per airframe. Reported MQ-9 unit costs vary widely by configuration — from about $13M for a bare airframe to over $56M for a full system with sensors and ground stations — so the combat-loss total is a rough estimate.",
     "notes": [
       "The headline figure is the most recent officially-stated fleet total, NOT a sum of the loss events below.",
       "Loss events are documented individually for context. Yemen tallies in particular overlap between Houthi claims and U.S. acknowledgements, so events should not be added together to derive the fleet size."

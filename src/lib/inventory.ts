@@ -47,6 +47,8 @@ export interface InventoryMeta {
   scope: string;
   fleetFloorRequirement: number;
   totalEverBuiltForUS: number;
+  combatUnitCostUsd: number;
+  combatUnitCostNote: string;
   notes: string[];
 }
 
@@ -84,6 +86,24 @@ export const netChangeSinceBaseline: number =
 export const documentedLosses: number = events
   .filter((e) => e.type === "loss")
   .reduce((sum, e) => sum + e.count, 0);
+
+/** Airframes lost specifically to enemy action (shootdowns + combat), not crashes. */
+export const combatLosses: number = events
+  .filter(
+    (e) =>
+      e.type === "loss" && (e.cause === "shootdown" || e.cause === "combat"),
+  )
+  .reduce((sum, e) => sum + e.count, 0);
+
+/** Estimated dollar cost of the combat-downed airframes. */
+export const combatLossCostUsd: number = combatLosses * meta.combatUnitCostUsd;
+
+/** Compact USD: $1.08B, $540M, etc. */
+export function formatUsd(n: number): string {
+  if (n >= 1e9) return `$${(n / 1e9).toFixed(2)}B`;
+  if (n >= 1e6) return `$${Math.round(n / 1e6)}M`;
+  return `$${n.toLocaleString("en-US")}`;
+}
 
 /** Format an ISO date as e.g. "May 20, 2026". */
 export function formatDate(iso: string): string {
