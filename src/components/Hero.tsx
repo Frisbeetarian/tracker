@@ -24,22 +24,26 @@ export default function Hero() {
 
         <hr className="my-4 border-grid" />
 
-        <p className="pixel-text text-[10px] text-muted">ACTIVE AIRFRAMES</p>
+        <p className="pixel-text flex items-center justify-center gap-3 text-center text-xs text-cyan glow-cyan sm:text-sm">
+          <span className="blink">▮</span>
+          REMAINING MQ-9S
+          <span className="blink">▮</span>
+        </p>
 
-        <div className="mt-4 flex flex-wrap items-end gap-x-6 gap-y-2">
-          <span className="pixel-text text-6xl text-amber glow-amber sm:text-8xl">
+        <div className="mt-4 flex flex-col items-center">
+          <span className="pixel-text leading-none text-amber glow-amber-strong text-[clamp(5rem,19vw,12rem)]">
             {currentTotal.count}
           </span>
           <span
-            className={`pixel-text text-sm ${
+            className={`pixel-text mt-5 text-xs sm:text-sm ${
               down ? "text-magenta glow-magenta" : "text-green glow-green"
             }`}
           >
-            {down ? "▼" : "▲"} {delta} since {baselineTotal.label}
+            {down ? "▼" : "▲"} {delta} SINCE {baselineTotal.label.toUpperCase()}
           </span>
         </div>
 
-        <p className="mt-4 text-lg text-muted">
+        <p className="mt-6 text-center text-lg text-muted">
           As of{" "}
           <span className="text-ink">{formatDate(currentTotal.date)}</span> ·
           source:{" "}

@@ -7,9 +7,17 @@ import { meta, formatDate } from "./lib/inventory";
 export default function App() {
   return (
     <>
+      <div
+        aria-hidden
+        className="pointer-events-none fixed inset-0 z-0 bg-center bg-no-repeat opacity-[0.07]"
+        style={{
+          backgroundImage: "url(/drone-bg.svg)",
+          backgroundSize: "min(92vw, 880px)",
+        }}
+      />
       <div className="crt-overlay" aria-hidden />
 
-      <main className="relative">
+      <main className="relative z-10">
         <Hero />
         <TrendChart />
         <Timeline />
