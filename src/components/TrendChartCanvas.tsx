@@ -1,0 +1,78 @@
+import {
+  Line,
+  LineChart,
+  ResponsiveContainer,
+  CartesianGrid,
+  XAxis,
+  YAxis,
+  Tooltip,
+  ReferenceLine,
+} from "recharts";
+import { totals, meta } from "../lib/inventory";
+
+const data = totals.map((t) => ({
+  label: t.label,
+  count: t.count,
+  date: t.date,
+}));
+
+interface TooltipPayload {
+  active?: boolean;
+  payload?: { payload: (typeof data)[number] }[];
+}
+
+function RetroTooltip({ active, payload }: TooltipPayload) {
+  if (!active || !payload?.length) return null;
+  const row = payload[0].payload;
+  return (
+    <div className="pixel-border bg-void px-3 py-2 font-[var(--font-term)] text-base">
+      <div className="pixel-text text-[10px] text-cyan">{row.label}</div>
+      <div className="mt-1 text-amber glow-amber">{row.count} airframes</div>
+    </div>
+  );
+}
+
+/** Recharts chart, lazy-loaded so it stays out of the initial bundle. */
+export default function TrendChartCanvas() {
+  return (
+    <ResponsiveContainer width="100%" height={320}>
+      <LineChart data={data} margin={{ top: 8, right: 16, left: -8, bottom: 8 }}>
+        <CartesianGrid stroke="#1b2230" strokeDasharray="2 4" />
+        <XAxis
+          dataKey="label"
+          stroke="#6b7689"
+          tick={{ fill: "#6b7689", fontFamily: "VT323", fontSize: 16 }}
+          tickLine={false}
+        />
+        <YAxis
+          stroke="#6b7689"
+          tick={{ fill: "#6b7689", fontFamily: "VT323", fontSize: 16 }}
+          tickLine={false}
+          domain={[0, "dataMax + 20"]}
+        />
+        <Tooltip content={<RetroTooltip />} cursor={{ stroke: "#00f0ff", strokeWidth: 1 }} />
+        <ReferenceLine
+          y={meta.fleetFloorRequirement}
+          stroke="#ff2e88"
+          strokeDasharray="4 4"
+          label={{
+            value: `FLOOR ${meta.fleetFloorRequirement}`,
+            fill: "#ff2e88",
+            fontFamily: "VT323",
+            fontSize: 16,
+            position: "insideTopRight",
+          }}
+        />
+        <Line
+          type="linear"
+          dataKey="count"
+          stroke="#ffb000"
+          strokeWidth={3}
+          dot={{ fill: "#ffb000", stroke: "#07070a", strokeWidth: 2, r: 5 }}
+          activeDot={{ r: 7, fill: "#39ff14" }}
+          style={{ filter: "drop-shadow(0 0 6px rgba(255,176,0,0.7))" }}
+        />
+      </LineChart>
+    </ResponsiveContainer>
+  );
+}

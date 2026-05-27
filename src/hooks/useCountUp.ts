@@ -1,4 +1,10 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
+
+// Layout effect on the client so the reset-to-0 happens before the browser
+// paints (no flash of the final value); plain effect during SSR to avoid a
+// "useLayoutEffect does nothing on the server" warning at build time.
+const useIsoLayoutEffect =
+  typeof window !== "undefined" ? useLayoutEffect : useEffect;
 
 /**
  * Returns `target` for SSR and the first client render (so prerendered HTML and
@@ -9,15 +15,15 @@ export function useCountUp(target: number, enabled: boolean, durationMs = 1500) 
   const [value, setValue] = useState(target);
   const rafRef = useRef<number | undefined>(undefined);
 
-  useEffect(() => {
+  useIsoLayoutEffect(() => {
     if (!enabled) return;
     const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     if (reduce) {
       setValue(target);
       return;
     }
-    const t0 = performance.now();
     setValue(0);
+    const t0 = performance.now();
     const tick = (t: number) => {
       const p = Math.min(1, (t - t0) / durationMs);
       const eased = 1 - Math.pow(1 - p, 3); // easeOutCubic

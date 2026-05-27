@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import ExperimentBackground from "./components/ExperimentBackground";
 import BootSequence from "./components/BootSequence";
 import HudBar from "./components/HudBar";
@@ -10,26 +10,28 @@ import Methodology from "./components/Methodology";
 import { meta, formatDate } from "./lib/inventory";
 
 export default function App() {
-  const [mounted, setMounted] = useState(false);
-  const [bootDone, setBootDone] = useState(false);
+  const [showBoot, setShowBoot] = useState(false);
+  const [countStarted, setCountStarted] = useState(false);
+  const startCount = useCallback(() => setCountStarted(true), []);
 
-  // Client-only: play the boot sequence on every page load. Skipped only for
-  // reduced-motion visitors, in which case the count still resolves instantly.
+  // Client-only: play the boot sequence on every load (skipped for reduced
+  // motion). The count starts as the overlay begins fading, so the number is
+  // already ticking when revealed — no flash of the final value.
   useEffect(() => {
-    setMounted(true);
     const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    if (reduce) setBootDone(true);
+    if (reduce) setCountStarted(true);
+    else setShowBoot(true);
   }, []);
 
   return (
     <>
       <ExperimentBackground />
       <div className="crt-overlay" aria-hidden />
-      {mounted && !bootDone && <BootSequence onDone={() => setBootDone(true)} />}
+      {showBoot && <BootSequence onReveal={startCount} />}
       <HudBar />
 
       <main className="relative z-10">
-        <Hero animate={mounted && bootDone} />
+        <Hero animate={countStarted} />
         <StatGrid />
         <TrendChart />
         <Timeline />

@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 const LINES = [
   "> INITIALIZING REAPER TRACKER",
@@ -10,15 +10,20 @@ const LINES = [
 ];
 
 const STEP_MS = 280;
+const FADE_MS = 700;
 
 /**
- * Full-screen retro boot sequence shown on every page load.
- * Rendered client-only by App (never in the prerendered HTML). Calls onDone
- * when finished so the headline count can start ticking up.
+ * Full-screen retro boot sequence shown on every page load (client-only;
+ * never in prerendered HTML). Calls onReveal at the moment it starts fading
+ * out — so the headline count begins ticking up while the overlay reveals it,
+ * avoiding any flash of the final value. Removes itself once faded.
  */
-export default function BootSequence({ onDone }: { onDone: () => void }) {
+export default function BootSequence({ onReveal }: { onReveal: () => void }) {
   const [shown, setShown] = useState(0);
   const [closing, setClosing] = useState(false);
+  const [gone, setGone] = useState(false);
+  const revealRef = useRef(onReveal);
+  revealRef.current = onReveal;
 
   useEffect(() => {
     const timers: number[] = [];
@@ -26,16 +31,23 @@ export default function BootSequence({ onDone }: { onDone: () => void }) {
       timers.push(window.setTimeout(() => setShown(i + 1), STEP_MS * (i + 1)));
     });
     const total = STEP_MS * LINES.length;
-    // Hold on "SYSTEM ONLINE" for ~1.45s, then fade out over 0.5s.
-    timers.push(window.setTimeout(() => setClosing(true), total + 1450));
-    timers.push(window.setTimeout(() => onDone(), total + 2000));
+    // Hold ~1.2s on "SYSTEM ONLINE", then start fading AND start the count-up.
+    timers.push(
+      window.setTimeout(() => {
+        setClosing(true);
+        revealRef.current();
+      }, total + 1200),
+    );
+    timers.push(window.setTimeout(() => setGone(true), total + 1200 + FADE_MS));
     return () => timers.forEach(clearTimeout);
-  }, [onDone]);
+  }, []);
+
+  if (gone) return null;
 
   return (
     <div
       aria-hidden
-      className={`fixed inset-0 z-[70] flex items-center justify-center bg-void transition-opacity duration-500 ${
+      className={`fixed inset-0 z-[70] flex items-center justify-center bg-void transition-opacity duration-700 ${
         closing ? "opacity-0" : "opacity-100"
       }`}
     >
