@@ -6,21 +6,29 @@ import {
   formatDate,
 } from "../lib/inventory";
 import { useCountUp } from "../hooks/useCountUp";
+import { useLang } from "../i18n/LanguageContext";
+import { totalLabel } from "../i18n/content.ar";
 import FloorBar from "./FloorBar";
+import LanguageToggle from "./LanguageToggle";
 
 export default function Hero({ animate = false }: { animate?: boolean }) {
+  const { t, lang } = useLang();
   const down = netChangeSinceBaseline < 0;
   const delta = Math.abs(netChangeSinceBaseline);
   const count = useCountUp(currentTotal.count, animate);
+  const baseLabel = totalLabel(baselineTotal.label, lang);
 
   return (
     <header className="mx-auto max-w-4xl px-4 pt-8 pb-12">
       {/* Status strip */}
       <div className="pixel-border tactical-grid bg-panel/80 p-4 sm:p-6">
         <div className="flex flex-wrap items-center justify-between gap-2 pixel-text text-[10px] text-cyan">
-          <span className="glow-cyan">MQ-9 REAPER // USAF FLEET</span>
-          <span className="flex items-center gap-2 text-green glow-green">
-            <span className="blink">●</span> TRACKING
+          <span className="glow-cyan">{t("fleetStatus")}</span>
+          <span className="flex items-center gap-3">
+            <span className="flex items-center gap-2 text-green glow-green">
+              <span className="blink">●</span> {t("tracking")}
+            </span>
+            <LanguageToggle />
           </span>
         </div>
 
@@ -28,7 +36,7 @@ export default function Hero({ animate = false }: { animate?: boolean }) {
 
         <p className="pixel-text flex items-center justify-center gap-3 text-center text-xs text-cyan glow-cyan sm:text-sm">
           <span className="blink">▮</span>
-          REMAINING MQ-9S
+          {t("remainingTitle")}
           <span className="blink">▮</span>
         </p>
 
@@ -41,14 +49,14 @@ export default function Hero({ animate = false }: { animate?: boolean }) {
               down ? "text-magenta glow-magenta" : "text-green glow-green"
             }`}
           >
-            {down ? "▼" : "▲"} {delta} SINCE {baselineTotal.label.toUpperCase()}
+            {down ? "▼" : "▲"} {delta} {t("since")} {baseLabel.toUpperCase()}
           </span>
         </div>
 
         <p className="mt-6 text-center text-lg text-muted">
-          As of{" "}
-          <span className="text-ink">{formatDate(currentTotal.date)}</span> ·
-          source:{" "}
+          {t("asOf")}{" "}
+          <span className="text-ink">{formatDate(currentTotal.date, lang)}</span>{" "}
+          · {t("source")}:{" "}
           <a
             href={currentTotal.source.url}
             target="_blank"
@@ -68,13 +76,7 @@ export default function Hero({ animate = false }: { animate?: boolean }) {
         </div>
       </div>
 
-      <p className="mt-6 text-xl leading-relaxed text-ink">
-        A sourced count of how many{" "}
-        <span className="text-amber glow-amber">MQ-9 Reaper</span> drones remain
-        in the U.S. Air Force fleet. The headline figure is the most recent total
-        the Air Force has stated publicly — not a guess. Every number on this
-        page links to its source.
-      </p>
+      <p className="mt-6 text-xl leading-relaxed text-ink">{t("heroIntro")}</p>
     </header>
   );
 }

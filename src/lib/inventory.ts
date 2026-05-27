@@ -1,4 +1,5 @@
 import rawData from "../data/inventory.json";
+import type { Lang } from "../i18n/strings";
 
 /** A citation backing a total or an event. */
 export interface Source {
@@ -105,9 +106,10 @@ export function formatUsd(n: number): string {
   return `$${n.toLocaleString("en-US")}`;
 }
 
-/** Format an ISO date as e.g. "May 20, 2026". */
-export function formatDate(iso: string): string {
-  return new Date(iso + "T00:00:00Z").toLocaleDateString("en-US", {
+/** Format an ISO date, e.g. "May 20, 2026" / "20 مايو 2026" (Latin digits). */
+export function formatDate(iso: string, lang: Lang = "en"): string {
+  const locale = lang === "ar" ? "ar-u-nu-latn" : "en-US";
+  return new Date(iso + "T00:00:00Z").toLocaleDateString(locale, {
     year: "numeric",
     month: "short",
     day: "numeric",

@@ -1,43 +1,48 @@
 import { meta, baselineTotal, currentTotal, formatDate } from "../lib/inventory";
+import { useLang } from "../i18n/LanguageContext";
+import { metaAr } from "../i18n/content.ar";
 import { SectionHeading } from "./ui";
 
 export default function Methodology() {
+  const { t, lang } = useLang();
+  const ar = lang === "ar";
+  const scope = ar ? metaAr.scope : meta.scope;
+  const notes = ar ? metaAr.notes : meta.notes;
+  const costNote = ar ? metaAr.combatUnitCostNote : meta.combatUnitCostNote;
+
   return (
     <section id="methodology" className="mx-auto max-w-4xl scroll-mt-28 px-4 py-10">
-      <SectionHeading index="03">METHODOLOGY</SectionHeading>
+      <SectionHeading index="03">{t("secMethodology")}</SectionHeading>
 
       <div className="pixel-border bg-panel/60 space-y-5 p-5 text-lg leading-relaxed">
         <p>
-          <span className="text-amber glow-amber">Scope.</span> {meta.scope}
+          <span className="text-amber glow-amber">{t("methodScopeLabel")}</span>{" "}
+          {scope}
         </p>
 
         <p>
-          <span className="text-amber glow-amber">The headline number.</span>{" "}
-          The big figure is the most recent fleet total the U.S. Air Force has
-          stated publicly ({currentTotal.count}, as of{" "}
-          {formatDate(currentTotal.date)}). It is taken directly from a sourced
-          figure — it is <span className="text-ink">not</span> derived by
-          subtracting the losses listed in the log.
+          <span className="text-amber glow-amber">{t("methodHeadlineLabel")}</span>{" "}
+          {t("methodHeadlineBody", {
+            count: currentTotal.count,
+            date: formatDate(currentTotal.date, lang),
+          })}
         </p>
 
         <p>
-          <span className="text-amber glow-amber">Why not just subtract?</span>{" "}
-          The fleet has shrunk from {baselineTotal.count} (
-          {formatDate(baselineTotal.date)}) for more reasons than combat — planned
-          retirements and drawdowns also reduce the count. And loss reports
-          overlap: Houthi claims, U.S. acknowledgements, and journalist tallies
-          do not line up one-to-one. Summing the log would produce a
-          falsely-precise, wrong number.
+          <span className="text-amber glow-amber">{t("methodSubtractLabel")}</span>{" "}
+          {t("methodSubtractBody", {
+            baseline: baselineTotal.count,
+            date: formatDate(baselineTotal.date, lang),
+          })}
         </p>
 
         <p>
-          <span className="text-amber glow-amber">Combat-loss cost.</span> The
-          dollar figure multiplies airframes lost to enemy action (shootdowns and
-          combat — not crashes) by an assumed unit cost. {meta.combatUnitCostNote}
+          <span className="text-amber glow-amber">{t("methodCostLabel")}</span>{" "}
+          {t("methodCostBody", { note: costNote })}
         </p>
 
         <ul className="space-y-2">
-          {meta.notes.map((note, i) => (
+          {notes.map((note, i) => (
             <li key={i} className="flex gap-2">
               <span className="text-cyan">▸</span>
               <span className="text-muted">{note}</span>
@@ -46,13 +51,19 @@ export default function Methodology() {
         </ul>
 
         <p>
-          <span className="text-amber glow-amber">Confidence levels.</span>{" "}
-          <span className="text-green glow-green">CONFIRMED</span> = acknowledged
-          by an official U.S. source or investigation.{" "}
-          <span className="text-amber glow-amber">REPORTED</span> = credible
-          reporting or an adversary claim not yet officially confirmed.{" "}
-          <span className="text-cyan glow-cyan">ESTIMATED</span> = inferred from
-          partial information.
+          <span className="text-amber glow-amber">{t("methodConfidenceLabel")}</span>{" "}
+          <span className="text-green glow-green">
+            {t("confConfirmed").toUpperCase()}
+          </span>{" "}
+          = {t("confConfirmedDef")}{" "}
+          <span className="text-amber glow-amber">
+            {t("confReported").toUpperCase()}
+          </span>{" "}
+          = {t("confReportedDef")}{" "}
+          <span className="text-cyan glow-cyan">
+            {t("confEstimated").toUpperCase()}
+          </span>{" "}
+          = {t("confEstimatedDef")}
         </p>
       </div>
     </section>
