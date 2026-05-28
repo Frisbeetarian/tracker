@@ -31,10 +31,17 @@ don't "simplify" it away:
 ## Updating the data
 
 All data lives in [`src/data/inventory.json`](src/data/inventory.json). **There
-is no backend** — edit this file and commit; git history is the audit trail.
+is no backend** — git history is the audit trail. Two options:
+
+- **Easy: invoke a skill.** `/add-event` walks through adding a sourced
+  loss/addition; `/update-total` adds a new official total. Both are
+  pre-loaded with the current dataset, validate via `npm run build`, and
+  won't commit for you.
+- **By hand:** edit `src/data/inventory.json` directly — the README has
+  copy-paste templates.
+
 Types/validation in [`src/lib/inventory.ts`](src/lib/inventory.ts) make
-`npm run build` fail on a malformed entry. The README has copy-paste templates
-for adding a total or an event.
+`npm run build` fail on a malformed entry.
 
 ## Architecture notes / gotchas
 
@@ -60,6 +67,17 @@ for adding a total or an event.
   default. Arabic content has English fallback. The Arabic font (Noto Kufi) is
   `unicode-range`-scoped and **not preloaded**, so English visitors don't
   download it — keep it that way.
+
+## Tooling & agents
+
+- **Skills** (`.claude/skills/`) — `/add-event`, `/update-total` for sourced
+  data edits (see "Updating the data" above).
+- **Agents** (`.claude/agents/`) — `source-checker` audits every URL in
+  `inventory.json` (treats 403/429 as inconclusive, not dead). Use before
+  publishing data changes.
+- **Hooks** (`.claude/settings.json`) — a `PostToolUse` hook auto-runs
+  `npm run typecheck` after `.ts`/`.tsx` edits; the `PreToolUse` main-commit
+  guard exists but is currently disabled.
 
 ## Deploy
 
