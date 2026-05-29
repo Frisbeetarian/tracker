@@ -5,7 +5,7 @@ import LanguageToggle from "./LanguageToggle";
 
 /**
  * Sticky tactical header that slides in once the hero scrolls out of view,
- * keeping the live count visible. Scroll listener is client-only; before it
+ * keeping the live count visible. Reveal logic is client-only; before it
  * runs the bar is parked off-screen, so it never obscures content.
  */
 export default function HudBar() {
@@ -14,6 +14,15 @@ export default function HudBar() {
   const down = netChangeSinceBaseline < 0;
 
   useEffect(() => {
+    const el = document.getElementById("hero");
+    if (el) {
+      const io = new IntersectionObserver(
+        ([entry]) => setShow(!entry.isIntersecting),
+        { rootMargin: "-1px 0px 0px 0px" }
+      );
+      io.observe(el);
+      return () => io.disconnect();
+    }
     const onScroll = () => setShow(window.scrollY > 460);
     onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
@@ -28,7 +37,7 @@ export default function HudBar() {
     >
       <div className="mx-auto flex max-w-4xl items-center justify-between gap-3 px-4 py-5 sm:py-6">
         <span className="pixel-text flex items-center gap-2 text-xs text-cyan glow-cyan">
-          <span className="blink">●</span> {t("hudTitle")}
+          <span className="blink" aria-hidden>●</span> {t("hudTitle")}
         </span>
         <span className="flex items-center gap-4">
           <span className="pixel-text flex items-baseline gap-2 text-xs">
@@ -36,7 +45,10 @@ export default function HudBar() {
               {currentTotal.count}
             </span>
             <span className="text-muted">{t("statRemaining")}</span>
-            <span className={down ? "text-magenta glow-magenta" : "text-green glow-green"}>
+            <span
+              aria-hidden
+              className={down ? "text-magenta glow-magenta" : "text-green glow-green"}
+            >
               {down ? "▼" : "▲"}
             </span>
           </span>

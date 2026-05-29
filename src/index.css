@@ -43,7 +43,7 @@
   --color-cyan: #00f0ff;
   --color-magenta: #ff2e88;
   --color-ink: #d7e0e8;
-  --color-muted: #6b7689;
+  --color-muted: #757f93;
 }
 
 :root {
@@ -52,6 +52,11 @@
 
 html {
   scroll-behavior: smooth;
+}
+
+:where(a, button, [tabindex]):focus-visible {
+  outline: 2px solid var(--color-cyan);
+  outline-offset: 2px;
 }
 
 body {
@@ -185,6 +190,9 @@ body {
 }
 
 @media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
   .crt-overlay {
     animation: none;
   }

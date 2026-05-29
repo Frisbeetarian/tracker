@@ -44,7 +44,7 @@ export default function Methodology() {
         <ul className="space-y-2">
           {notes.map((note, i) => (
             <li key={i} className="flex gap-2">
-              <span className="text-cyan">▸</span>
+              <span className="text-cyan" aria-hidden>▸</span>
               <span className="text-muted">{note}</span>
             </li>
           ))}
