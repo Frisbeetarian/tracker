@@ -55,7 +55,7 @@ export default function EventCard({ event }: { event: ReaperEvent }) {
       <ul className="mt-4 space-y-1">
         {event.sources.map((s) => (
           <li key={s.url} className="text-base leading-snug">
-            <span className="text-muted">▸ </span>
+            <span className="text-muted" aria-hidden>▸ </span>
             <a
               href={s.url}
               target="_blank"

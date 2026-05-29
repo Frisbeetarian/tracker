@@ -19,13 +19,15 @@ const toneText: Record<string, string> = {
 
 const VALUE = "text-2xl sm:text-3xl";
 
+const belowBy = meta.fleetFloorRequirement - currentTotal.count;
+
 const stats = [
   { key: "statRemaining", value: currentTotal.count, tone: "amber", prefix: "", vcls: VALUE },
   {
     key: "statBelowFloor",
-    value: meta.fleetFloorRequirement - currentTotal.count,
+    value: Math.abs(belowBy),
     tone: "magenta",
-    prefix: "−",
+    prefix: belowBy >= 0 ? "−" : "+",
     vcls: VALUE,
   },
   {

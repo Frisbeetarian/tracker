@@ -16,13 +16,24 @@ export default function App() {
   const [countStarted, setCountStarted] = useState(false);
   const startCount = useCallback(() => setCountStarted(true), []);
 
-  // Client-only: play the boot sequence on every load (skipped for reduced
-  // motion). The count starts as the overlay begins fading, so the number is
-  // already ticking when revealed — no flash of the final value.
+  // Client-only: play the boot sequence once per browser session (skipped for
+  // reduced motion). The count starts as the overlay begins fading, so the
+  // number is already ticking when revealed — no flash of the final value.
   useEffect(() => {
     const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    if (reduce) setCountStarted(true);
-    else setShowBoot(true);
+    if (reduce) {
+      setCountStarted(true);
+      return;
+    }
+    try {
+      if (sessionStorage.getItem("rt-booted")) setCountStarted(true);
+      else {
+        setShowBoot(true);
+        sessionStorage.setItem("rt-booted", "1");
+      }
+    } catch {
+      setShowBoot(true);
+    }
   }, []);
 
   return (

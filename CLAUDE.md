@@ -12,6 +12,7 @@ npm run build       # tsc + vite-react-ssg build → dist/ (prerendered)
 npm run preview     # preview the production build
 npm run start       # serve dist/ on $PORT (how Railway runs it)
 npm run typecheck   # tsc --noEmit
+npm run test        # vitest run (unit tests for the inventory data layer)
 npm run lighthouse  # build + run Lighthouse CI locally
 ```
 
@@ -40,17 +41,24 @@ is no backend** — git history is the audit trail. Two options:
 - **By hand:** edit `src/data/inventory.json` directly — the README has
   copy-paste templates.
 
-Types/validation in [`src/lib/inventory.ts`](src/lib/inventory.ts) make
-`npm run build` fail on a malformed entry.
+`validateInventory()` in [`src/lib/inventory.ts`](src/lib/inventory.ts) runs at
+module load, so a malformed entry (bad enum, missing field, bad date, empty
+`totals`) throws during the SSG prerender and **fails `npm run build`** with a
+field-level message. The core invariants (headline = stated total, never
+`baseline − losses`; loss/combat sums) are locked down by
+[`src/lib/inventory.test.ts`](src/lib/inventory.test.ts) — run `npm run test`.
 
 ## Architecture notes / gotchas
 
 - **Prerendered SPA** via `vite-react-ssg` (`src/main.tsx`). The page renders to
   static HTML at build (good for SEO/crawlers) and hydrates on the client.
   Anything that touches the DOM, `window`, or measures layout must be
-  **client-only** (gate behind a mounted flag) so prerender + hydration stay
-  clean — see `TrendChart.tsx` (Recharts is lazy + client-only), `BootSequence`,
-  and `useCountUp`. Keep the prerendered HTML matching the first client render.
+  **client-only** (gate behind a mounted/enabled flag) so prerender + hydration
+  stay clean — see `BootSequence`, `useCountUp`, and the hover state in
+  `TrendChartCanvas.tsx`. Keep the prerendered HTML matching the first client
+  render. The trend chart is a **hand-rolled inline SVG** (`TrendChartCanvas.tsx`,
+  no charting lib) so it server-renders into the static HTML; only its hover
+  tooltip is client-only. Don't reintroduce a heavy charting dependency.
 - **Performance is gated by Lighthouse CI** (`.github/workflows/lighthouse.yml`,
   budget in `lighthouserc.json`, runs on PRs to `main`). Don't regress CLS
   (< 0.1) or the category floors.
@@ -78,6 +86,9 @@ Types/validation in [`src/lib/inventory.ts`](src/lib/inventory.ts) make
 - **Hooks** (`.claude/settings.json`) — a `PostToolUse` hook auto-runs
   `npm run typecheck` after `.ts`/`.tsx` edits; the `PreToolUse` main-commit
   guard exists but is currently disabled.
+- **Tests** (`vitest`) — `src/lib/inventory.test.ts` guards the data layer's
+  invariants and `validateInventory`. Prefer relationship assertions over
+  hardcoded counts so the suite survives routine data updates.
 
 ## Deploy
 

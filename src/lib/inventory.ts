@@ -59,7 +59,111 @@ export interface Inventory {
   events: ReaperEvent[];
 }
 
-const inventory = rawData as unknown as Inventory;
+const DATE_RE = /^\d{4}-\d{2}-\d{2}$/;
+const CAUSES: EventCause[] = ["shootdown", "crash", "combat", "retired", "other"];
+const CONFIDENCES: Confidence[] = ["confirmed", "reported", "estimated"];
+const EVENT_TYPES: ReaperEvent["type"][] = ["loss", "addition"];
+
+const isObj = (v: unknown): v is Record<string, unknown> =>
+  typeof v === "object" && v !== null && !Array.isArray(v);
+const isStr = (v: unknown): v is string => typeof v === "string";
+const isNum = (v: unknown): v is number =>
+  typeof v === "number" && Number.isFinite(v);
+/** A real calendar date in YYYY-MM-DD form (rejects 2026-13-40, 2026-02-30, …). */
+const isIsoDate = (s: string): boolean => {
+  if (!DATE_RE.test(s)) return false;
+  const d = new Date(s + "T00:00:00Z");
+  return !Number.isNaN(d.getTime()) && d.toISOString().startsWith(s);
+};
+
+function isSource(v: unknown, where: string): Source {
+  if (!isObj(v)) throw new Error(`Invalid ${where}: must be an object`);
+  for (const key of ["title", "publisher", "url"] as const) {
+    if (!isStr(v[key]) || v[key].length === 0)
+      throw new Error(`Invalid ${where}: ${key} must be a non-empty string`);
+  }
+  return v as unknown as Source;
+}
+
+/** Validate raw JSON against the Inventory shape, throwing a descriptive Error. */
+export function validateInventory(raw: unknown): Inventory {
+  if (!isObj(raw)) throw new Error("Invalid inventory: root must be an object");
+
+  // meta
+  const meta = raw.meta;
+  if (!isObj(meta)) throw new Error("Invalid inventory: meta must be an object");
+  for (const key of ["lastUpdated", "scope", "combatUnitCostNote"] as const) {
+    if (!isStr(meta[key]))
+      throw new Error(`Invalid meta.${key}: must be a string`);
+  }
+  for (const key of [
+    "fleetFloorRequirement",
+    "totalEverBuiltForUS",
+    "combatUnitCostUsd",
+  ] as const) {
+    if (!isNum(meta[key]))
+      throw new Error(`Invalid meta.${key}: must be a finite number`);
+  }
+  if (!Array.isArray(meta.notes) || !meta.notes.every(isStr))
+    throw new Error("Invalid meta.notes: must be an array of strings");
+
+  // totals
+  if (!Array.isArray(raw.totals) || raw.totals.length === 0)
+    throw new Error("Invalid inventory: totals must be a non-empty array");
+  raw.totals.forEach((t, i) => {
+    const at = `totals[${i}]`;
+    if (!isObj(t)) throw new Error(`Invalid ${at}: must be an object`);
+    if (!isStr(t.date) || !isIsoDate(t.date))
+      throw new Error(`Invalid ${at}: date must be a real YYYY-MM-DD date`);
+    if (!isStr(t.label))
+      throw new Error(`Invalid ${at}: label must be a string`);
+    if (!isNum(t.count))
+      throw new Error(`Invalid ${at}: count must be a finite number`);
+    if (t.note !== undefined && !isStr(t.note))
+      throw new Error(`Invalid ${at}: note must be a string when present`);
+    isSource(t.source, `${at}.source`);
+  });
+
+  // events
+  if (!Array.isArray(raw.events))
+    throw new Error("Invalid inventory: events must be an array");
+  raw.events.forEach((e, i) => {
+    if (!isObj(e)) throw new Error(`Invalid events[${i}]: must be an object`);
+    const id = isStr(e.id) ? e.id : "";
+    const at = `events[${i}] (id "${id}")`;
+    if (!isStr(e.id)) throw new Error(`Invalid events[${i}]: id must be a string`);
+    if (!isStr(e.date) || !isIsoDate(e.date))
+      throw new Error(`Invalid ${at}: date must be a real YYYY-MM-DD date`);
+    if (!isStr(e.type) || !EVENT_TYPES.includes(e.type as ReaperEvent["type"]))
+      throw new Error(
+        `Invalid ${at}: type "${String(e.type)}" is not one of ${EVENT_TYPES.join(", ")}`,
+      );
+    if (!isNum(e.count))
+      throw new Error(`Invalid ${at}: count must be a finite number`);
+    if (!isStr(e.cause) || !CAUSES.includes(e.cause as EventCause))
+      throw new Error(
+        `Invalid ${at}: cause "${String(e.cause)}" is not one of ${CAUSES.join(", ")}`,
+      );
+    if (!isStr(e.title))
+      throw new Error(`Invalid ${at}: title must be a string`);
+    if (!isStr(e.summary))
+      throw new Error(`Invalid ${at}: summary must be a string`);
+    if (
+      !isStr(e.confidence) ||
+      !CONFIDENCES.includes(e.confidence as Confidence)
+    )
+      throw new Error(
+        `Invalid ${at}: confidence "${String(e.confidence)}" is not one of ${CONFIDENCES.join(", ")}`,
+      );
+    if (!Array.isArray(e.sources) || e.sources.length === 0)
+      throw new Error(`Invalid ${at}: sources must be a non-empty array`);
+    e.sources.forEach((s, j) => isSource(s, `${at}.sources[${j}]`));
+  });
+
+  return raw as unknown as Inventory;
+}
+
+const inventory = validateInventory(rawData);
 
 export const meta = inventory.meta;
 
